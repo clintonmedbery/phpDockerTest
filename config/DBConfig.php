@@ -6,16 +6,17 @@ Class DBConfig{
     var $password = "test_password";
     var $dbname = "test_php_db";
     var $conn;
-    function getConnstring() {
-        $con = mysqli_connect($this->servername, $this->username, $this->password, $this->dbname) or die("Connection failed: " . mysqli_connect_error());
+    public function getConnection(){
 
-        /* check connection */
-        if (mysqli_connect_errno()) {
-            printf("Connect failed: %s\n", mysqli_connect_error());
-            exit();
-        } else {
-            $this->conn = $con;
+        $this->conn = null;
+
+        try{
+            $this->conn = new PDO("mysql:host=" . $this->servername . ";dbname=" . $this->dbname, $this->username, $this->password);
+            $this->conn->exec("set names utf8");
+        } catch(PDOException $exception) {
+            echo "Connection error: " . $exception->getMessage();
         }
+
         return $this->conn;
     }
 }

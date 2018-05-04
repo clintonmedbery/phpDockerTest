@@ -7,7 +7,7 @@ COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 
 WORKDIR /srv/app
 
-RUN docker-php-ext-install mbstring pdo pdo_mysql mysqli \
+RUN docker-php-ext-install mbstring pdo pdo_mysql \
     && chown -R www-data:www-data /srv/app \
     && docker-php-ext-enable mysqli \
     && a2enmod rewrite

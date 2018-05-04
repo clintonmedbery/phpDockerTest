@@ -1,21 +1,20 @@
 <?php
 // Connect to database
 include("../../config/DBConfig.php");
-$db = new DBConfig();
-$connection =  $db->getConnstring();
+include("../../services/EmployeeService.php");
 
-$request_method=$_SERVER["REQUEST_METHOD"];
+$db = new DBConfig();
+$connection =  $db->getConnection();
+
+$request_method = $_SERVER["REQUEST_METHOD"];
 
 switch($request_method) {
     case 'GET':
-        // Retrive Products
-        if(!empty($_GET["id"]))
-        {
-            $id=intval($_GET["id"]);
+        // Retrieve Products
+        if(!empty($_GET["id"])) {
+            $id = intval($_GET["id"]);
             get_employees($id);
-        }
-        else
-        {
+        } else {
             get_employees();
         }
         break;
@@ -26,18 +25,13 @@ switch($request_method) {
 }
 
 function get_employees($id=0) {
-    global $connection;
-    $query="SELECT * FROM employee";
-    if($id != 0)
-    {
-        $query.=" WHERE id=".$id." LIMIT 1";
+    if($id != 0) {
+        $response = EmployeeService::getInstance()->getById($id);
+    } else {
+        $response = EmployeeService::getInstance()->getAll();
     }
-    $response=array();
-    $result=mysqli_query($connection, $query);
-    while($row=mysqli_fetch_array($result))
-    {
-        $response[]=$row;
-    }
+
     header('Content-Type: application/json');
     echo json_encode($response);
+
 }
