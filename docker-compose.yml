@@ -8,4 +8,20 @@ services:
     ports:
       - 8080:80
     volumes:
-          - .:/srv/app
+      - .:/srv/app
+    links:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: test_php_db
+      DB_USERNAME: dbadmin
+      DB_PASSWORD: test_password
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_DATABASE: test_php_db
+      MYSQL_USER: dbadmin
+      MYSQL_PASSWORD: test_password
+      MYSQL_ROOT_PASSWORD: test_password
